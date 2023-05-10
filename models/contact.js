@@ -1,25 +1,6 @@
-// const fs = require('fs/promises')
-
-const listContacts = async () => {};
-
-const getContactById = async (contactId) => {};
-
-const removeContact = async (contactId) => {};
-
-const addContact = async (body) => {};
-
-const updateContact = async (contactId, body) => {};
-
-module.exports = {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
-};
 const { Schema, model } = require("mongoose");
 
-const { handelMongooseError } = require("../utils");
+const { handleMongooseError } = require("../utils");
 
 const Joi = require("joi");
 
@@ -32,11 +13,16 @@ const contactSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
   },
   { versionKey: false, timestamps: false }
 );
 
-contactSchema.post("save", handelMongooseError);
+contactSchema.post("save", handleMongooseError);
 
 const updateFavoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
