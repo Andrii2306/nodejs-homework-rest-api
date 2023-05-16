@@ -13,20 +13,21 @@ const getAll = async (req, res) => {
   res.json(result);
 };
 
-const getById = async (req, res) => {
+const getById = async (req, res, next) => {
+  const { _id: owner } = req.user;
   const { contactId } = req.params;
-  const result = await Contact.find(contactId);
+  const result = await Contact.findById({ _id: contactId, owner });
   if (!result) {
     throw HttpError(404, "Not found!");
   }
-  res.json(result);
+  res.status(200).json({ code: 200, data: result });
 };
 
-const addContact = async (req, res) => {
+async function addContact(req, res) {
   const { _id: owner } = req.user;
   const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
-};
+}
 
 const updateContactById = async (req, res) => {
   const { _id: owner } = req.user;
